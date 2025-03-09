@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prescription Scanner</title>
+    <link rel="stylesheet" href="{% static 'css/prescription-scanner-style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Prescription Scanner</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="image">Scan and digitize prescriptions quickly and accurately<br> with AI-powered text recognition.</label>
+            <input type="file" name="image" id="image" accept="image/png, image/jpg, image/jpeg" required>
+            <br>
+            <button type="submit">Upload</button>
+        </form>
+        {% if response %}
+            <div class="response">
+                <h2>AI Analysis:</h2>
+                <div>{{ response|safe }}</div>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
