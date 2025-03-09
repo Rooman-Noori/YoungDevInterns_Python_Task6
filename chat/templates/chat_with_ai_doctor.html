@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with an AI Doctor</title>
+    <link rel="stylesheet" href="{% static 'css/chat-style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <a href="{% url 'create_chat' %}" class="create-chat-button">Create New Chat</a>
+            {% if chats %}
+                <ul>
+                    {% for chat in chats %}
+                        <li>
+                            <a href="/chat/{{ chat.id }}" class="chat-name">
+                                {{ chat.chat_name|truncatechars:20 }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <div class="chat-container">
+            <h4>Chat with an AI Doctor ✨</h4>
+            <div class="chat-box" id="chat-box">
+                {% if chat %}
+                    {% for message in chat.messages %}
+                        <div class="message user-message">
+                            <p>{{ message.user }}</p>
+                        </div>
+                        <div class="message bot-message">
+                            <img src="{% static 'images/bot.png' %}" alt="" class="avatar">
+                            <p>{{ message.bot }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <a href="{% url 'create_chat' %}"><div class="response" align="center">
+                    Create New Chat ✨
+                    </div></a>
+                {% endif %}
+            </div>
+            {% if chat %}
+                <form id="chat-form" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="chat_id" value="{{ chat.id }}">
+                    <input type="text" id="user-input" name="user_input" placeholder="Type your message..." required>
+                    <button type="submit">Send</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+    <script>
+        document.getElementById('chat-form').onsubmit = function(event) {
+            event.preventDefault();
+            this.submit();
+        };
+    </script>
+</body>
+</html>
